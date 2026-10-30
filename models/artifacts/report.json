@@ -1,0 +1,463 @@
+{
+  "options": {
+    "Category": [
+      "Beauty",
+      "Furniture",
+      "Home & Kitchen",
+      "Office Supplies",
+      "Technology"
+    ],
+    "Region": [
+      "Central",
+      "East",
+      "North",
+      "South",
+      "West"
+    ],
+    "Segment": [
+      "Consumer",
+      "Corporate",
+      "Small Business"
+    ],
+    "Channel": [
+      "Marketplace",
+      "Online",
+      "Retail Store"
+    ],
+    "Payment_Method": [
+      "Cash on Delivery",
+      "Credit Card",
+      "Debit Card",
+      "Net Banking",
+      "UPI"
+    ]
+  },
+  "subcategories": {
+    "Beauty": [
+      "Haircare",
+      "Makeup",
+      "Personal Care",
+      "Skincare"
+    ],
+    "Furniture": [
+      "Chairs",
+      "Desks",
+      "Storage",
+      "Tables"
+    ],
+    "Home & Kitchen": [
+      "Appliances",
+      "Cleaning",
+      "Cookware",
+      "Decor"
+    ],
+    "Office Supplies": [
+      "Binders",
+      "Paper",
+      "Pens",
+      "Printers"
+    ],
+    "Technology": [
+      "Accessories",
+      "Laptops",
+      "Monitors",
+      "Phones"
+    ]
+  },
+  "models": {
+    "profit_linear": {
+      "target": "Profit",
+      "target_column": "Profit_INR",
+      "model": "Linear Regression",
+      "task": "regression",
+      "features": [
+        "Quantity",
+        "Unit_Price_INR",
+        "Discount",
+        "Order_Month",
+        "Order_DayOfWeek",
+        "Category",
+        "Subcategory",
+        "Region",
+        "Segment",
+        "Channel",
+        "Payment_Method"
+      ],
+      "description": "Estimates the profit of an order in INR before fulfillment.",
+      "metrics": {
+        "r2": 0.8233,
+        "mae": 467.79,
+        "rmse": 746.47
+      }
+    },
+    "return_logistic": {
+      "target": "Return risk",
+      "target_column": "Returned",
+      "model": "Logistic Regression",
+      "task": "classification",
+      "features": [
+        "Quantity",
+        "Unit_Price_INR",
+        "Discount",
+        "Order_Month",
+        "Order_DayOfWeek",
+        "Category",
+        "Subcategory",
+        "Region",
+        "Segment",
+        "Channel",
+        "Payment_Method"
+      ],
+      "classes": [
+        "No",
+        "Yes"
+      ],
+      "description": "Scores the probability that an order is returned.",
+      "metrics": {
+        "accuracy": 0.5357,
+        "precision": 0.0777,
+        "recall": 0.4932,
+        "f1": 0.1342,
+        "roc_auc": 0.5183
+      },
+      "confusion_matrix": [
+        [
+          1499,
+          1282
+        ],
+        [
+          111,
+          108
+        ]
+      ]
+    },
+    "channel_tree": {
+      "target": "Sales channel",
+      "target_column": "Channel",
+      "model": "Decision Tree",
+      "task": "classification",
+      "features": [
+        "Category",
+        "Subcategory",
+        "Region",
+        "Quantity",
+        "Segment"
+      ],
+      "classes": [
+        "Marketplace",
+        "Online",
+        "Retail Store"
+      ],
+      "description": "Predicts the sales channel from product, region, quantity and customer segment.",
+      "metrics": {
+        "accuracy": 0.3053,
+        "macro_precision": 0.3484,
+        "macro_recall": 0.3456,
+        "macro_f1": 0.2884,
+        "roc_auc": 0.5085
+      },
+      "confusion_matrix": [
+        [
+          120,
+          116,
+          360
+        ],
+        [
+          317,
+          390,
+          1033
+        ],
+        [
+          117,
+          141,
+          406
+        ]
+      ],
+      "feature_importance": [
+        {
+          "feature": "Quantity",
+          "importance": 0.3158
+        },
+        {
+          "feature": "Segment_Small Business",
+          "importance": 0.1334
+        },
+        {
+          "feature": "Region_East",
+          "importance": 0.1227
+        },
+        {
+          "feature": "Subcategory_Paper",
+          "importance": 0.0989
+        },
+        {
+          "feature": "Category_Home & Kitchen",
+          "importance": 0.0967
+        },
+        {
+          "feature": "Subcategory_Skincare",
+          "importance": 0.0809
+        },
+        {
+          "feature": "Subcategory_Chairs",
+          "importance": 0.0689
+        },
+        {
+          "feature": "Subcategory_Storage",
+          "importance": 0.0472
+        },
+        {
+          "feature": "Category_Beauty",
+          "importance": 0.0356
+        },
+        {
+          "feature": "Segment_Corporate",
+          "importance": 0.0
+        },
+        {
+          "feature": "Subcategory_Tables",
+          "importance": 0.0
+        },
+        {
+          "feature": "Region_Central",
+          "importance": 0.0
+        },
+        {
+          "feature": "Subcategory_Phones",
+          "importance": 0.0
+        },
+        {
+          "feature": "Subcategory_Printers",
+          "importance": 0.0
+        },
+        {
+          "feature": "Region_North",
+          "importance": 0.0
+        }
+      ],
+      "rules": "|--- Segment_Small Business <= 0.50\n|   |--- Subcategory_Paper <= 0.50\n|   |   |--- Quantity <= 5.50\n|   |   |   |--- Category_Home & Kitchen <= 0.50\n|   |   |   |   |--- class: Retail Store\n|   |   |   |--- Category_Home & Kitchen >  0.50\n|   |   |   |   |--- class: Retail Store\n|   |   |--- Quantity >  5.50\n|   |   |   |--- Subcategory_Storage <= 0.50\n|   |   |   |   |--- class: Online\n|   |   |   |--- Subcategory_Storage >  0.50\n|   |   |   |   |--- class: Marketplace\n|   |--- Subcategory_Paper >  0.50\n|   |   |--- Quantity <= 5.50\n|   |   |   |--- Region_East <= 0.50\n|   |   |   |   |--- class: Marketplace\n|   |   |   |--- Region_East >  0.50\n|   |   |   |   |--- class: Retail Store\n|   |   |--- Quantity >  5.50\n|   |   |   |--- Quantity <= 6.50\n|   |   |   |   |--- class: Online\n|   |   |   |--- Quantity >  6.50\n|   |   |   |   |--- class: Online\n|--- Segment_Small Business >  0.50\n|   |--- Quantity <= 2.50\n|   |   |--- Region_East <= 0.50\n|   |   |   |--- Category_Beauty <= 0.50\n|   |   |   |   |--- class: Retail Store\n|   |   |   |--- Category_Beauty >  0.50\n|   |   |   |   |--- class: Retail Store\n|   |   |--- Region_East >  0.50\n|   |   |   |--- class: Online\n|   |--- Quantity >  2.50\n|   |   |--- Subcategory_Skincare <= 0.50\n|   |   |   |--- Subcategory_Chairs <= 0.50\n|   |   |   |   |--- class: Marketplace\n|   |   |   |--- Subcategory_Chairs >  0.50\n|   |   |   |   |--- class: Marketplace\n|   |   |--- Subcategory_Skincare >  0.50\n|   |   |   |--- class: Retail Store\n",
+      "tree_image": "decision_tree.png"
+    },
+    "segment_forest": {
+      "target": "Customer segment",
+      "target_column": "Segment",
+      "model": "Random Forest",
+      "task": "classification",
+      "features": [
+        "Quantity",
+        "Unit_Price_INR",
+        "Discount",
+        "Category",
+        "Channel"
+      ],
+      "classes": [
+        "Consumer",
+        "Corporate",
+        "Small Business"
+      ],
+      "description": "Predicts the customer segment from purchasing pattern, quantity, category and channel.",
+      "metrics": {
+        "accuracy": 0.3757,
+        "macro_precision": 0.3424,
+        "macro_recall": 0.3436,
+        "macro_f1": 0.3383,
+        "roc_auc": 0.5049
+      },
+      "confusion_matrix": [
+        [
+          726,
+          451,
+          468
+        ],
+        [
+          336,
+          232,
+          193
+        ],
+        [
+          252,
+          173,
+          169
+        ]
+      ],
+      "feature_importance": [
+        {
+          "feature": "Unit_Price_INR",
+          "importance": 0.5102
+        },
+        {
+          "feature": "Discount",
+          "importance": 0.175
+        },
+        {
+          "feature": "Quantity",
+          "importance": 0.1707
+        },
+        {
+          "feature": "Category_Office Supplies",
+          "importance": 0.019
+        },
+        {
+          "feature": "Category_Furniture",
+          "importance": 0.0189
+        },
+        {
+          "feature": "Category_Home & Kitchen",
+          "importance": 0.0189
+        },
+        {
+          "feature": "Category_Beauty",
+          "importance": 0.0184
+        },
+        {
+          "feature": "Category_Technology",
+          "importance": 0.0183
+        },
+        {
+          "feature": "Channel_Online",
+          "importance": 0.0183
+        },
+        {
+          "feature": "Channel_Retail Store",
+          "importance": 0.0164
+        },
+        {
+          "feature": "Channel_Marketplace",
+          "importance": 0.0159
+        }
+      ]
+    },
+    "payment_svm": {
+      "target": "Payment method",
+      "target_column": "Payment_Method",
+      "model": "SVM",
+      "task": "classification",
+      "features": [
+        "Quantity",
+        "Unit_Price_INR",
+        "Discount",
+        "Category",
+        "Region",
+        "Channel",
+        "Segment"
+      ],
+      "classes": [
+        "Cash on Delivery",
+        "Credit Card",
+        "Debit Card",
+        "Net Banking",
+        "UPI"
+      ],
+      "description": "Predicts the payment method from order characteristics, region, channel and segment.",
+      "metrics": {
+        "accuracy": 0.1823,
+        "macro_precision": 0.2,
+        "macro_recall": 0.1983,
+        "macro_f1": 0.1788,
+        "roc_auc": 0.5014
+      },
+      "confusion_matrix": [
+        [
+          64,
+          55,
+          42,
+          40,
+          43
+        ],
+        [
+          179,
+          126,
+          170,
+          145,
+          115
+        ],
+        [
+          146,
+          90,
+          113,
+          87,
+          66
+        ],
+        [
+          135,
+          71,
+          98,
+          83,
+          72
+        ],
+        [
+          303,
+          172,
+          255,
+          169,
+          161
+        ]
+      ]
+    },
+    "category_bayes": {
+      "target": "Product category",
+      "target_column": "Category",
+      "model": "Naive Bayes",
+      "task": "classification",
+      "features": [
+        "Quantity",
+        "Unit_Price_INR",
+        "Discount",
+        "Region",
+        "Segment"
+      ],
+      "classes": [
+        "Beauty",
+        "Furniture",
+        "Home & Kitchen",
+        "Office Supplies",
+        "Technology"
+      ],
+      "description": "Predicts the product category from quantity, price, discount, region and segment.",
+      "metrics": {
+        "accuracy": 0.2777,
+        "macro_precision": 0.2052,
+        "macro_recall": 0.2047,
+        "macro_f1": 0.1294,
+        "roc_auc": 0.5031
+      },
+      "confusion_matrix": [
+        [
+          0,
+          3,
+          1,
+          58,
+          320
+        ],
+        [
+          0,
+          4,
+          1,
+          100,
+          467
+        ],
+        [
+          0,
+          2,
+          3,
+          91,
+          432
+        ],
+        [
+          0,
+          3,
+          3,
+          112,
+          554
+        ],
+        [
+          0,
+          5,
+          3,
+          124,
+          714
+        ]
+      ]
+    }
+  }
+}
