@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sales Prediction Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Sales Prediction & Return Risk Analytics</h1>
+            <p class="subtitle">Machine Learning Dashboard powered by FastAPI & Scikit-Learn</p>
+            <div id="api-status-badge" class="badge badge-loading">Checking Backend Connection...</div>
+        </header>
+
+        <section class="card menu-card">
+            <label for="model-menu">What do you want to predict?</label>
+            <select id="model-menu"></select>
+            <p id="model-desc" class="card-desc"></p>
+        </section>
+
+        <main class="grid-2col">
+            <section class="card">
+                <h2 id="form-title">Order Details</h2>
+                <form id="predict-form">
+                    <div id="fields"></div>
+                    <div class="btn-group">
+                        <button type="submit" class="btn btn-primary">Predict</button>
+                        <button type="button" id="reset-btn" class="btn btn-secondary">Reset</button>
+                    </div>
+                </form>
+
+                <div id="result" class="result-box hidden">
+                    <h3 id="result-title">Result</h3>
+                    <div id="result-output" class="metric-highlight">--</div>
+                    <div id="result-prob" class="submetric"></div>
+                </div>
+            </section>
+
+            <section class="card">
+                <h2>Model Insights</h2>
+                <p class="card-desc">Test set results for the selected model (80/20 split).</p>
+                <div id="insights"></div>
+            </section>
+        </main>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
